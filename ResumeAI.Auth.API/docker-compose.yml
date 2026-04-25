@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+
+  # ── PostgreSQL ──────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: resumeai_auth_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: resumeai_auth_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Auth Service ────────────────────────────────────────────────────────────
+  auth-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: resumeai_auth_api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5001:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__AuthDb: "Host=postgres;Port=5432;Database=resumeai_auth_dev;Username=postgres;Password=postgres"
+      Jwt__Secret: "dev-secret-key-minimum-32-characters-long!!"
+      Jwt__Issuer: "ResumeAI.Auth"
+      Jwt__Audience: "ResumeAI"
+      Jwt__ExpiryHours: "24"
+
+volumes:
+  postgres_data:
