@@ -1,0 +1,32 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+
+
+## Published output
+publish/
+out/
+
+## Logs
+logs/
+*.log
+
+## Secrets — NEVER commit these
+appsettings.json
+appsettings.Development.json
+*secrets*.json
+
+## EF Core design-time files
+*.db
+*.sqlite
+
+## Docker
+.dockerignore
+
+## OS
+.DS_Store
+Thumbs.db
