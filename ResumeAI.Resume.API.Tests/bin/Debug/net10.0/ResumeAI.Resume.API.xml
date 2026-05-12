@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ResumeAI.Resume.API</name>
+    </assembly>
+    <members>
+        <member name="T:ResumeAI.Resume.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Resume.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Resume.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Resume.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ResumeAI.Resume.Controllers.ResumeController">
+            <summary>
+            Resume CRUD, duplication, publish/unpublish, ATS score update,
+            public gallery, and template-based queries.
+            Route: /api/resumes
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.Create(ResumeAI.Resume.DTOs.Request.CreateResumeRequest,System.Threading.CancellationToken)">
+            <summary>
+            Create a new resume from a template.
+            FREE users are limited to 3 resumes. PREMIUM users have no limit.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.GetById(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Get a resume by ID.
+            Private resumes are only accessible by their owner.
+            Public resumes are accessible by anyone and increment ViewCount.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.GetByUser(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Get all resumes belonging to a specific user.
+            Users can only retrieve their own resumes. Admins can retrieve any user's resumes.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.GetMyResumes(System.Threading.CancellationToken)">
+            <summary>Get all resumes of the currently authenticated user.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.Update(System.Int32,ResumeAI.Resume.DTOs.Request.UpdateResumeRequest,System.Threading.CancellationToken)">
+            <summary>Update resume title, target job title, template, language, or status.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.Delete(System.Int32,System.Threading.CancellationToken)">
+            <summary>Permanently delete a resume. Only the owner can delete.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.Duplicate(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Deep-copy a resume. The copy starts as DRAFT, IsPublic = false, AtsScore = 0.
+            FREE users cannot duplicate if they already have 3 resumes.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.UpdateAtsScore(System.Int32,ResumeAI.Resume.DTOs.Request.UpdateAtsScoreRequest,System.Threading.CancellationToken)">
+            <summary>
+            Update ATS compatibility score (0-100).
+            Called internally by the AI Service after running an ATS check.
+            Uses atomic ExecuteUpdateAsync — no full entity load.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.Publish(System.Int32,System.Threading.CancellationToken)">
+            <summary>Share a resume to the public gallery (IsPublic = true).</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.Unpublish(System.Int32,System.Threading.CancellationToken)">
+            <summary>Remove a resume from the public gallery (IsPublic = false).</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.GetPublic(System.Threading.CancellationToken)">
+            <summary>
+            Browse all publicly shared resumes (the public gallery).
+            Accessible without authentication.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Controllers.ResumeController.GetByTemplate(System.Int32,System.Threading.CancellationToken)">
+            <summary>Get all resumes using a specific template (Admin use).</summary>
+        </member>
+        <member name="P:ResumeAI.Resume.Entities.ResumeEntity.UserId">
+            <summary>Owner — references users table in Auth Service (same DB).</summary>
+        </member>
+        <member name="P:ResumeAI.Resume.Entities.ResumeEntity.TemplateId">
+            <summary>References resume_templates table (Template Service — same DB).</summary>
+        </member>
+        <member name="P:ResumeAI.Resume.Entities.ResumeEntity.AtsScore">
+            <summary>0-100 ATS compatibility score updated asynchronously by AI Service.</summary>
+        </member>
+        <member name="P:ResumeAI.Resume.Entities.ResumeEntity.IsPublic">
+            <summary>True when user shares resume to public gallery.</summary>
+        </member>
+        <member name="P:ResumeAI.Resume.Entities.ResumeEntity.ViewCount">
+            <summary>Incremented each time public resume is viewed.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Repositories.ResumeRepository.UpdateAtsScoreAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Updates only AtsScore column without loading the full entity.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Repositories.ResumeRepository.PublishAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Sets IsPublic = true atomically.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Repositories.ResumeRepository.UnpublishAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Sets IsPublic = false atomically.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Repositories.ResumeRepository.IncrementViewCountAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Increments ViewCount by 1 atomically without loading the entity.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.CreateResumeAsync(System.Int32,System.String,ResumeAI.Resume.DTOs.Request.CreateResumeRequest,System.Threading.CancellationToken)">
+            <summary>Create a new resume. Enforces FREE tier limit of 3 resumes.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.GetResumeByIdAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Get a single resume by ID. Increments ViewCount if IsPublic.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.GetResumesByUserAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Get all resumes belonging to a user.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.UpdateResumeAsync(System.Int32,System.Int32,ResumeAI.Resume.DTOs.Request.UpdateResumeRequest,System.Threading.CancellationToken)">
+            <summary>Update resume fields. Only owner can update.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.DeleteResumeAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Permanently delete a resume. Only owner can delete.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.DuplicateResumeAsync(System.Int32,System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>Deep copy a resume and all its sections. Enforces FREE tier limit.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.UpdateAtsScoreAsync(System.Int32,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Atomically update ATS score — called by AI Service.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.PublishResumeAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Set IsPublic = true to share to public gallery.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.UnpublishResumeAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Set IsPublic = false to remove from public gallery.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.GetPublicResumesAsync(System.Threading.CancellationToken)">
+            <summary>Get all publicly shared resumes for the gallery.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.Interfaces.IResumeService.GetResumesByTemplateAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Get all resumes using a specific template.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.ResumeService.RequireResumeAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Loads a resume or throws 404.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.ResumeService.RequireOwnerAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Loads a resume and verifies the requesting user is the owner.</summary>
+        </member>
+        <member name="M:ResumeAI.Resume.Services.ResumeService.EnforceFreeUserLimitAsync(System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>Throws if FREE user already has 3 or more resumes.</summary>
+        </member>
+    </members>
+</doc>

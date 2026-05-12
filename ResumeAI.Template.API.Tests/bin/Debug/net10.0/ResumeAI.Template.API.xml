@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ResumeAI.Template.API</name>
+    </assembly>
+    <members>
+        <member name="T:ResumeAI.Template.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Template.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Template.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Template.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ResumeAI.Template.Controllers.TemplateController">
+            <summary>
+            Template library management.
+            Admin: create, update, deactivate.
+            Users: browse, filter by tier/category, get by ID, increment usage.
+            Route: /api/templates
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.Create(ResumeAI.Template.DTOs.Request.CreateTemplateRequest,System.Threading.CancellationToken)">
+            <summary>Create a new template. Admin only.</summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all active templates. Returns lightweight list without HtmlLayout and CssStyles.</summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.GetById(System.Int32,System.Threading.CancellationToken)">
+            <summary>Get full template details including HtmlLayout and CssStyles. Used when user selects a template.</summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.GetFree(System.Threading.CancellationToken)">
+            <summary>Get all free-tier templates. Available to all users including guests.</summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.GetPremium(System.Threading.CancellationToken)">
+            <summary>Get all premium-tier templates. List is visible to all; usage requires Premium subscription.</summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.GetPopular(System.Threading.CancellationToken)">
+            <summary>Get the top 10 most-used templates ordered by UsageCount descending.</summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.GetByCategory(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Filter templates by category.
+            Valid values: PROFESSIONAL, CREATIVE, MODERN, MINIMALIST, ATS_OPTIMISED
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.Update(System.Int32,ResumeAI.Template.DTOs.Request.UpdateTemplateRequest,System.Threading.CancellationToken)">
+            <summary>Update a template's name, description, layout, styles, category, or tier. Admin only.</summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.Deactivate(System.Int32,System.Threading.CancellationToken)">
+            <summary>Soft-delete a template (IsActive = false). Admin only.</summary>
+        </member>
+        <member name="M:ResumeAI.Template.Controllers.TemplateController.IncrementUsage(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Increment UsageCount by 1 when a user selects this template to create a resume.
+            Uses ExecuteUpdateAsync for atomic update without loading the full entity.
+            Called by Resume Service or frontend when a resume is created from this template.
+            </summary>
+        </member>
+    </members>
+</doc>

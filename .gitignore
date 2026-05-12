@@ -1,0 +1,27 @@
+# Visual Studio / .NET Core
+[Bb]in/
+[Oo]bj/
+.vs/
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+
+# Secrets and Configuration
+# (Ignoring these prevents accidentally pushing real passwords and keys)
+appsettings.json
+appsettings.Development.json
+
+# Docker
+.dockerignore
+
+# Build output
+bin/
+obj/

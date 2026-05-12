@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ResumeAI.Section.API</name>
+    </assembly>
+    <members>
+        <member name="T:ResumeAI.Section.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Section.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Section.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Section.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ResumeAI.Section.Controllers.SectionController">
+            <summary>
+            Resume section CRUD, drag-and-drop reordering, visibility toggle,
+            bulk update, and type-based retrieval.
+            Route: /api/sections
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.Add(ResumeAI.Section.DTOs.Request.AddSectionRequest,System.Threading.CancellationToken)">
+            <summary>
+            Add a new section to a resume.
+            SectionType must be one of: SUMMARY, EXPERIENCE, EDUCATION, SKILLS,
+            CERTIFICATIONS, PROJECTS, LANGUAGES, VOLUNTEER, CUSTOM.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.GetByResume(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Get all sections for a resume ordered by DisplayOrder ascending.
+            Used to render the live resume preview.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.GetById(System.Int32,System.Threading.CancellationToken)">
+            <summary>Get a single section by its ID.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.Update(System.Int32,ResumeAI.Section.DTOs.Request.UpdateSectionRequest,System.Threading.CancellationToken)">
+            <summary>
+            Update a section's title, content, type, visibility, or AiGenerated flag.
+            When AI Service generates content, it sets AiGenerated = true.
+            When user manually edits, frontend should set AiGenerated = false.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.Delete(System.Int32,System.Threading.CancellationToken)">
+            <summary>Permanently delete a single section.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.Reorder(System.Int32,ResumeAI.Section.DTOs.Request.ReorderSectionsRequest,System.Threading.CancellationToken)">
+            <summary>
+            Reorder sections via drag-and-drop.
+            Send the full ordered list of section IDs — position = new DisplayOrder.
+            Example body: { "orderedSectionIds": [3, 1, 5, 2] }
+            Section 3 gets DisplayOrder=0, section 1 gets DisplayOrder=1, etc.
+            Uses ExecuteUpdateAsync in a loop — atomic per-row update.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.ToggleVisibility(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Toggle IsVisible for a section.
+            Hides or shows the section in the resume preview without deleting it.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.DeleteAll(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Delete ALL sections belonging to a resume.
+            Used when deleting a resume or resetting it entirely.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.GetByType(System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Get a section by its type for a specific resume.
+            Example: GET /api/sections/resume/5/type/SUMMARY
+            Returns null if no section of that type exists.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Controllers.SectionController.BulkUpdate(System.Int32,ResumeAI.Section.DTOs.Request.BulkUpdateSectionsRequest,System.Threading.CancellationToken)">
+            <summary>
+            Batch update multiple sections in one DB round-trip.
+            Used by the live resume editor to save all section changes at once.
+            Uses EF Core ChangeTracker — single SaveChangesAsync call for all updates.
+            </summary>
+        </member>
+        <member name="P:ResumeAI.Section.DTOs.Request.AddSectionRequest.Content">
+            <summary>Rich text JSON string — stored as-is.</summary>
+        </member>
+        <member name="P:ResumeAI.Section.DTOs.Request.UpdateSectionRequest.Content">
+            <summary>Rich text JSON string — stored as-is.</summary>
+        </member>
+        <member name="P:ResumeAI.Section.DTOs.Request.UpdateSectionRequest.AiGenerated">
+            <summary>
+            Set to true by AI Service when it generates content for this section.
+            Set to false when user manually edits the content.
+            </summary>
+        </member>
+        <member name="T:ResumeAI.Section.DTOs.Request.ReorderSectionsRequest">
+            <summary>
+            Accepts an ordered list of section IDs.
+            The position in the list determines the new DisplayOrder value.
+            Example: [3, 1, 5] means SectionId=3 gets order=0, SectionId=1 gets order=1, etc.
+            </summary>
+        </member>
+        <member name="T:ResumeAI.Section.DTOs.Request.BulkUpdateSectionItem">
+            <summary>
+            Batch update multiple sections in a single SaveChangesAsync call.
+            Used by the live resume editor to save all section changes at once.
+            </summary>
+        </member>
+        <member name="P:ResumeAI.Section.Entities.ResumeSection.ResumeId">
+            <summary>References resumes table (Resume Service — same DB).</summary>
+        </member>
+        <member name="P:ResumeAI.Section.Entities.ResumeSection.UserId">
+            <summary>Owner of the resume — from JWT for auth checks.</summary>
+        </member>
+        <member name="P:ResumeAI.Section.Entities.ResumeSection.SectionType">
+            <summary>Stored as string in DB via HasConversion.</summary>
+        </member>
+        <member name="P:ResumeAI.Section.Entities.ResumeSection.Content">
+            <summary>
+            Rich text content stored as a JSON string.
+            Example: {"text":"...", "bullets":["...","..."]}
+            Section Service stores and retrieves as-is — no parsing.
+            </summary>
+        </member>
+        <member name="P:ResumeAI.Section.Entities.ResumeSection.DisplayOrder">
+            <summary>Used for drag-and-drop ordering. Lower value = higher position.</summary>
+        </member>
+        <member name="P:ResumeAI.Section.Entities.ResumeSection.IsVisible">
+            <summary>Hides the section from the resume preview without deleting it.</summary>
+        </member>
+        <member name="P:ResumeAI.Section.Entities.ResumeSection.AiGenerated">
+            <summary>
+            True when this section's content was generated by the AI Service.
+            Set to true by AI Service when calling UpdateSection.
+            </summary>
+        </member>
+        <member name="T:ResumeAI.Section.Enums.SectionType">
+            <summary>
+            String-backed enum for section types.
+            Stored as string in the database via EF Core HasConversion.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Repositories.Interfaces.ISectionRepository.FindByResumeIdOrderByDisplayOrderAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Returns sections sorted by DisplayOrder ascending — used for live preview.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Repositories.Interfaces.ISectionRepository.UpdateDisplayOrderAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Atomically update DisplayOrder for a single section.
+            Used in the ReorderSections loop via ExecuteUpdateAsync.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Repositories.Interfaces.ISectionRepository.ToggleVisibilityAsync(System.Int32,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Atomically toggle IsVisible for a single section.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Repositories.Interfaces.ISectionRepository.BulkUpdateAsync(System.Collections.Generic.IList{ResumeAI.Section.Entities.ResumeSection},System.Threading.CancellationToken)">
+            <summary>
+            Batch update multiple sections in one SaveChangesAsync call.
+            Uses EF Core ChangeTracker — caller attaches entities before calling.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Repositories.SectionRepository.UpdateDisplayOrderAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Updates only DisplayOrder column atomically using ExecuteUpdateAsync.
+            Called in a loop by ReorderSections — no full entity load needed.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Repositories.SectionRepository.ToggleVisibilityAsync(System.Int32,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Atomically toggles IsVisible using ExecuteUpdateAsync.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Repositories.SectionRepository.BulkUpdateAsync(System.Collections.Generic.IList{ResumeAI.Section.Entities.ResumeSection},System.Threading.CancellationToken)">
+            <summary>
+            Batch update multiple sections in a single SaveChangesAsync call.
+            Uses EF Core ChangeTracker — attaches each entity and marks as Modified.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.AddSectionAsync(System.Int32,ResumeAI.Section.DTOs.Request.AddSectionRequest,System.Threading.CancellationToken)">
+            <summary>Add a new section to a resume. Owner verified via userId.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.GetSectionsByResumeAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Get all sections for a resume ordered by DisplayOrder.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.GetSectionByIdAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Get a single section by ID.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.UpdateSectionAsync(System.Int32,System.Int32,ResumeAI.Section.DTOs.Request.UpdateSectionRequest,System.Threading.CancellationToken)">
+            <summary>Update a section's content, title, type, visibility, or AiGenerated flag.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.DeleteSectionAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Permanently delete a single section.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.ReorderSectionsAsync(System.Int32,System.Int32,ResumeAI.Section.DTOs.Request.ReorderSectionsRequest,System.Threading.CancellationToken)">
+            <summary>
+            Reorder sections via drag-and-drop.
+            Accepts ordered list of section IDs — position = new DisplayOrder.
+            Uses ExecuteUpdateAsync in a loop for atomic per-row updates.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.ToggleVisibilityAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Toggle IsVisible for a section (show/hide without deleting).</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.DeleteAllSectionsAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Delete ALL sections belonging to a resume.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.GetSectionByTypeAsync(System.Int32,System.String,System.Int32,System.Threading.CancellationToken)">
+            <summary>Get sections filtered by SectionType for a specific resume.</summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.Interfaces.ISectionService.BulkUpdateSectionsAsync(System.Int32,System.Int32,ResumeAI.Section.DTOs.Request.BulkUpdateSectionsRequest,System.Threading.CancellationToken)">
+            <summary>
+            Batch update multiple sections in a single DB round-trip.
+            Used by live resume editor to save all changes at once.
+            Uses EF Core ChangeTracker — single SaveChangesAsync call.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.SectionService.ReorderSectionsAsync(System.Int32,System.Int32,ResumeAI.Section.DTOs.Request.ReorderSectionsRequest,System.Threading.CancellationToken)">
+            <summary>
+            Accepts ordered list of section IDs.
+            Loops and calls ExecuteUpdateAsync for each — atomic per-row update.
+            Position in the list = new DisplayOrder value.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Section.Services.SectionService.BulkUpdateSectionsAsync(System.Int32,System.Int32,ResumeAI.Section.DTOs.Request.BulkUpdateSectionsRequest,System.Threading.CancellationToken)">
+            <summary>
+            Batch update multiple sections in one DB round-trip.
+            Loads existing sections, applies changes, then calls BulkUpdateAsync
+            which uses EF Core ChangeTracker with a single SaveChangesAsync.
+            </summary>
+        </member>
+    </members>
+</doc>
