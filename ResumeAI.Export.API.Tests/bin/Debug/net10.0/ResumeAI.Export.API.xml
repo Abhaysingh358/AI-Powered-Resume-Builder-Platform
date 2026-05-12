@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ResumeAI.Export.API</name>
+    </assembly>
+    <members>
+        <member name="T:ResumeAI.Export.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Export.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Export.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ResumeAI.Export.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ResumeAI.Export.Controllers.ExportController">
+            <summary>
+            Resume export to PDF, DOCX, and JSON.
+            Files are generated in memory and streamed directly to the browser.
+            Export job records are tracked in the database for history and stats.
+            Route: /api/exports
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Export.Controllers.ExportController.ExportPdf(ResumeAI.Export.DTOs.Request.ExportPdfRequest,System.Threading.CancellationToken)">
+            <summary>
+            Export resume to PDF using QuestPDF.
+            File is generated in memory and streamed directly to the browser for download.
+            FREE users: limited to 10 PDF exports per day.
+            PREMIUM users: unlimited.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Export.Controllers.ExportController.ExportDocx(ResumeAI.Export.DTOs.Request.ExportDocxRequest,System.Threading.CancellationToken)">
+            <summary>
+            Export resume to DOCX using DocumentFormat.OpenXml (OpenXML SDK).
+            File is generated in memory and streamed directly to the browser.
+            Available to all authenticated users.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Export.Controllers.ExportController.ExportJson(ResumeAI.Export.DTOs.Request.ExportJsonRequest,System.Threading.CancellationToken)">
+            <summary>
+            Export resume to machine-readable JSON using System.Text.Json.
+            Available to Premium users only.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Export.Controllers.ExportController.GetJobStatus(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Get the status of a specific export job by its ID.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Export.Controllers.ExportController.GetByUser(System.Threading.CancellationToken)">
+            <summary>
+            Get all export jobs for the authenticated user.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Export.Controllers.ExportController.GetStats(System.Threading.CancellationToken)">
+            <summary>
+            Get export statistics for the authenticated user.
+            Shows total exports by format, today's count, and remaining daily quota.
+            </summary>
+        </member>
+        <member name="M:ResumeAI.Export.Controllers.ExportController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Delete an export job record. Only the owner can delete.
+            </summary>
+        </member>
+    </members>
+</doc>

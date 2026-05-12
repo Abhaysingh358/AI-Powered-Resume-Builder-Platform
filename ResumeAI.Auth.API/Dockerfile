@@ -8,8 +8,7 @@ RUN dotnet restore "ResumeAI.Auth.API.csproj"
 COPY . .
 RUN dotnet publish "ResumeAI.Auth.API.csproj" \
     -c Release \
-    -o /app/publish \
-    --no-restore
+    -o /app/publish
 
 # ── Stage 2: Runtime ──────────────────────────────────────────────────────────
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime

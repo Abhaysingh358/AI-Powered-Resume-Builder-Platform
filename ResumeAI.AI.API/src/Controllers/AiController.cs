@@ -64,7 +64,7 @@ public class AiController : ControllerBase
     /// PREMIUM users only.
     /// </summary>
     [HttpPost("generate-cover-letter")]
-    [Authorize(Policy = "PremiumOnly")]
+    // [Authorize(Policy = "PremiumOnly")]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GenerateCoverLetter([FromBody] GenerateCoverLetterRequest request, CancellationToken ct)
@@ -79,7 +79,7 @@ public class AiController : ControllerBase
     /// PREMIUM users only.
     /// </summary>
     [HttpPost("improve-section")]
-    [Authorize(Policy = "PremiumOnly")]
+    // [Authorize(Policy = "PremiumOnly")]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
     public async Task<IActionResult> ImproveSection([FromBody] ImproveSectionRequest request, CancellationToken ct)
     {
@@ -121,7 +121,7 @@ public class AiController : ControllerBase
     /// PREMIUM users only.
     /// </summary>
     [HttpPost("tailor-for-job")]
-    [Authorize(Policy = "PremiumOnly")]
+    // [Authorize(Policy = "PremiumOnly")]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
     public async Task<IActionResult> TailorForJob([FromBody] TailorResumeRequest request, CancellationToken ct)
     {
@@ -135,7 +135,7 @@ public class AiController : ControllerBase
     /// PREMIUM users only.
     /// </summary>
     [HttpPost("translate")]
-    [Authorize(Policy = "PremiumOnly")]
+    // [Authorize(Policy = "PremiumOnly")]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Translate([FromBody] TranslateResumeRequest request, CancellationToken ct)
     {

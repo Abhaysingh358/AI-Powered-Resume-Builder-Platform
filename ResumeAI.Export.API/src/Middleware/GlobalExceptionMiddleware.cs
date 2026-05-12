@@ -71,7 +71,7 @@ public class GlobalExceptionMiddleware
             body,
             new JsonSerializerOptions
             {
-                PropertyNamingPolicy = null
+                PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
             });
 
         await context.Response.WriteAsync(json);

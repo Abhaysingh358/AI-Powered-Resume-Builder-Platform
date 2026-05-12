@@ -26,7 +26,8 @@ try
         .AddJsonOptions(options =>
         {
             // Keep PascalCase on the wire — change to CamelCase if preferred
-            options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
         });
 
     // ------------------- Database (PostgreSQL via EF Core) --------------------------------

@@ -52,12 +52,25 @@ public class TemplateService : ITemplateService
     {
         var template = await RequireTemplateAsync(templateId, ct);
 
-        if (!string.IsNullOrWhiteSpace(request.Name))        template.Name        = request.Name.Trim();
-        if (request.Description  is not null)                 template.Description = request.Description.Trim();
-        if (request.ThumbnailUrl is not null)                 template.ThumbnailUrl = request.ThumbnailUrl.Trim();
-        if (request.HtmlLayout   is not null)                 template.HtmlLayout  = request.HtmlLayout;
-        if (request.CssStyles    is not null)                 template.CssStyles   = request.CssStyles;
-        if (request.IsPremium    is not null)                 template.IsPremium   = request.IsPremium.Value;
+        if (!string.IsNullOrWhiteSpace(request.Name))        
+            template.Name  = request.Name.Trim();
+
+        if (request.Description  is not null)
+
+            template.Description = request.Description.Trim();
+
+        if (request.ThumbnailUrl is not null)
+
+                template.ThumbnailUrl = request.ThumbnailUrl.Trim();
+
+        if (request.HtmlLayout   is not null) 
+                        template.HtmlLayout  = request.HtmlLayout;
+
+        if (request.CssStyles    is not null) 
+                        template.CssStyles   = request.CssStyles;
+                        
+        if (request.IsPremium    is not null) 
+                        template.IsPremium   = request.IsPremium.Value;
 
         if (!string.IsNullOrWhiteSpace(request.Category))
             template.Category = ParseCategory(request.Category);

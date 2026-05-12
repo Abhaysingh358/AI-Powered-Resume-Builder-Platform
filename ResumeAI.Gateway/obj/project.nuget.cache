@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "Ng+6Yhba5dw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Siddharth\\Desktop\\ResumeAI\\AIPoweredResume\\ResumeAI.Gateway\\ResumeAI.Gateway.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Siddharth\\.nuget\\packages\\system.io.hashing\\8.0.0\\system.io.hashing.8.0.0.nupkg.sha512",
+    "C:\\Users\\Siddharth\\.nuget\\packages\\yarp.reverseproxy\\2.3.0\\yarp.reverseproxy.2.3.0.nupkg.sha512"
+  ],
+  "logs": []
+}
